@@ -10,7 +10,16 @@ exports.up = function(knex) {
   })
   .createTable('steps', tbl => {
       tbl.increments();
+      tbl.integer('step_number').notNullable();
+      tbl.string('step_name').notNullable();
       tbl.text('instructions').notNullable();
+      tbl.integer('recipe_id')
+      .unsigned()
+      .notNullable()
+      .references('id')
+      .inTable('recipes')
+      .onUpdate('CASCADE')
+      .onDelete('CASCADE');
   })
   .createTable('recipes_ingredients', tbl => {
       tbl.integer('recipe_id')
@@ -27,30 +36,30 @@ exports.up = function(knex) {
       .inTable('ingredients')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
-      tbl.integer('ingredient_quantity')
+      tbl.string('quantity')
       .notNullable();
 
       tbl.primary(['recipe_id', 'ingredient_id']);
   })
-  .createTable('recipes_steps', tbl =>{
-      tbl.integer('recipe_id')
-      .unsigned()
-      .notNullable()
-      .references('id')
-      .inTable('recipes')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
-      tbl.integer('step_id')
-      .unsigned()
-      .notNullable()
-      .references('id')
-      .inTable('steps');
-      tbl.integer('step_order')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+//   .createTable('recipes_steps', tbl =>{
+//       tbl.integer('recipe_id')
+//       .unsigned()
+//       .notNullable()
+//       .references('id')
+//       .inTable('recipes')
+//       .onUpdate('CASCADE')
+//       .onDelete('CASCADE');
+//       tbl.integer('step_id')
+//       .unsigned()
+//       .notNullable()
+//       .references('id')
+//       .inTable('steps');
+//       tbl.integer('step_order')
+//       .onUpdate('CASCADE')
+//       .onDelete('CASCADE');
 
-      tbl.primary(['recipe_id', 'step_id']);
-  })
+//       tbl.primary(['recipe_id', 'step_id']);
+//   })
 };
 
 exports.down = function(knex) {
